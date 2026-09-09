@@ -32,6 +32,31 @@ and an `expected` block. A run passes a case when the agent's verdict matches
   rationale: why this is the right verdict
 ```
 
+## Running them
+
+```bash
+python3 tools/eval_runner.py
+```
+
+The runner automates what is mechanically checkable and is explicit about the
+rest:
+
+- **Deterministic (runs in CI):** in golden cases with URLs, every extracted
+  host must match the allowlist and the matcher verdict must equal
+  `expected.verdict`; in adversarial cases with URLs, no extracted host may
+  earn a trust verdict; golden `must_mention` domains must be allowlist-matched.
+  A failure here means data drift, a matcher regression, or a fixture that
+  contradicts the allowlist.
+- **LLM-judged (not run in CI):** scam-pattern screening, refusals, freshness
+  behavior, and routing answers need an agent applying SKILL.md. The runner
+  lists these cases with their expectations and never counts them as passed.
+  To score a recorded agent run offline, pass `--answers answers.yaml` mapping
+  case id to the agent's answer text; `must_mention` is checked as strings,
+  `must_not` stays human-judged.
+
+한국어 요약: 자동으로 검증 가능한 항목은 CI에서 바로 실행하고, 문장 해석이
+필요한 사례는 에이전트 판단 대상으로 분리하여 표시합니다.
+
 ## Rules
 
 - Fixtures are fictional. No real victim data, no real scammer handles.

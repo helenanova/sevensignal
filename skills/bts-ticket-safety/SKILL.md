@@ -44,6 +44,10 @@ Normalize, then match:
    verdict UNVERIFIED, and tell the fan to navigate from the official site
    instead of tapping.
 
+A tested reference implementation of these rules lives in
+`tools/domain_matcher.py`; unit tests in `tools/test_domain_matcher.py` pin the
+exact behaviors above, including the lookalikes that must never match.
+
 ## Verdict taxonomy
 
 | Verdict | Meaning | What you tell the fan |
@@ -91,3 +95,4 @@ presale registration, bts.ibighit.com for announcements.
   SCAM_INDICATORS(사기 징후), OUT_OF_SCOPE(거절 대상).
 - 날짜·가격·예매 시간 같은 정보는 반드시 오늘 공식 페이지에서 다시 확인하고,
   확인하지 못하면 STALE로 표시합니다.
+- 도메인 일치 규칙의 검증된 참조 구현은 `tools/domain_matcher.py`에 있습니다.

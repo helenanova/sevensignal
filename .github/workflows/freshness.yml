@@ -1,0 +1,79 @@
+name: freshness
+
+# Weekly guard against trust data going stale: the allowlist is only as good
+# as its last_verified dates and the links behind them. When anything is
+# older than 30 days or a source URL dies, this workflow opens (or updates)
+# ONE issue labeled "stale-data". It never changes data and never auto-closes:
+# re-verification is a human decision with Tier 1 evidence.
+
+on:
+  schedule:
+    - cron: "17 9 * * 1" # Mondays 09:17 UTC (off the top-of-hour rush)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    name: Staleness and source-link check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+
+      # These steps always succeed: the issue opened below is the warning
+      # channel, so the scheduled workflow itself stays green.
+      - name: Staleness check (30-day fail-safe)
+        id: staleness
+        run: |
+          set +e
+          python3 tools/validate_data.py --fail-on-stale | tee staleness.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Source-link liveness check
+        id: links
+        run: |
+          set +e
+          python3 tools/check_links.py --fail | tee links.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Open or update the stale-data issue
+        if: steps.staleness.outputs.exit_code != '0' || steps.links.outputs.exit_code != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          {
+            echo "## Freshness check failed ($(date -u +%Y-%m-%d))"
+            echo
+            echo "Automated weekly check found stale trust data or dead source links."
+            echo
+            echo '```'
+            cat staleness.txt links.txt
+            echo '```'
+            echo
+            echo "To resolve: re-verify the flagged entries against a Tier 1 notice"
+            echo "(bts.ibighit.com or weverse.io), update last_verified, and close this"
+            echo "issue. See CONTRIBUTING.md for the evidence standard."
+          } > freshness-report.md
+          gh label create stale-data \
+            --description "Trust data or source links need re-verification" \
+            --color FBCA04 --force
+          existing=$(gh issue list --label stale-data --state open \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file freshness-report.md
+            echo "Updated existing issue #$existing"
+          else
+            gh issue create --title "Stale trust data or dead source links (weekly freshness check)" \
+              --label stale-data --body-file freshness-report.md
+            echo "Opened new issue"
+          fi

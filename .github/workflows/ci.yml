@@ -1,0 +1,53 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  matcher-tests:
+    name: Domain matcher unit tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run unit tests (standard library only, no dependencies)
+        run: python3 tools/test_domain_matcher.py -v
+
+  data-validation:
+    name: Allowlist + eval schema validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Validate allowlist, eval fixtures, and every YAML file
+        run: python3 tools/validate_data.py
+      - name: Staleness report (warning only; the freshness workflow enforces)
+        run: python3 tools/validate_data.py --max-age-days 30
+
+  deterministic-evals:
+    name: Deterministic eval assertions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run deterministic eval checks
+        run: python3 tools/eval_runner.py

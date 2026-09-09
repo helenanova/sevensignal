@@ -1,0 +1,4 @@
+# Dev/CI dependencies for the maintainer tools in tools/.
+# The domain matcher (tools/domain_matcher.py) itself is dependency-free by
+# design; only validation and eval tooling needs PyYAML.
+PyYAML>=5.4

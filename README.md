@@ -41,7 +41,8 @@ sevensignal/
   CONTRIBUTING.md             content and evidence rules for contributors
   CODE_OF_CONDUCT.md          contributor covenant
   CHANGELOG.md                release history
-  .github/                    issue forms and pull request template
+  .github/                    issue forms, pull request template, CI workflows
+  tools/                      executable checks (matcher, validators, eval runner)
   skills/
     bts-ticket-safety/
       SKILL.md                the skill definition (English + Korean summary)
@@ -57,6 +58,25 @@ sevensignal/
         refusal.yaml          out-of-scope asks -> expected refusals
         freshness.yaml        claims that expire -> re-verification rules
 ```
+
+## Verify the trust data locally
+
+The domain-matching rules are executable, and the trust data carries its own
+checks:
+
+```bash
+python3 tools/test_domain_matcher.py   # unit tests (no dependencies)
+python3 tools/validate_data.py         # schema + 30-day staleness check
+python3 tools/eval_runner.py           # deterministic eval assertions
+python3 tools/check_links.py           # live source-link check
+```
+
+See `tools/README.md` for details. CI runs the first three on every change;
+a weekly workflow re-checks data freshness and source links and opens one
+`stale-data` issue when anything needs re-verification.
+
+한국어 요약: 위 명령으로 도메인 일치 규칙과 신뢰 데이터를 직접 검증할 수
+있습니다. 데이터가 30일 이상 오래되면 자동으로 경고가 열립니다.
 
 ## Roadmap (not built yet)
 
