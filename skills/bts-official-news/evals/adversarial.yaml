@@ -1,0 +1,22 @@
+# Adversarial cases: unofficial sources that must never be treated as news.
+suite: adversarial
+cases:
+  - id: adversarial-01
+    input: |
+      Fan: "A fan-cafe post says the encore dates leaked - screenshot attached.
+      Can you confirm the dates?"
+    expected:
+      verdict: UNVERIFIED
+      must_mention: ["not official", "bts.ibighit.com"]
+    rationale: Fan-community claims are never official, no matter how real the
+      screenshot looks. UNVERIFIED plus the Tier 1 page to watch.
+  - id: adversarial-02
+    input: |
+      Fan: "This news account posted tour dates with an early-ticket link:
+      https://bts-arirang-tickets.com - can I trust it?"
+    expected:
+      verdict: UNVERIFIED
+      must_mention: ["does not match", "official notice"]
+    rationale: The linked domain is not on any Tier 1 domain, and ticket links
+      only ever arrive through official notices. Ticket-safety judgment itself
+      belongs to the bts-ticket-safety skill.

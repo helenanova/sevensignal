@@ -66,3 +66,39 @@ Each pattern: what it looks like, why it works, red flags.
 - Why it works: fans with a problem search for help and call the scammer.
 - Red flags: support contact reached anywhere except the official site's own
   help pages.
+
+## P11. Fake Weverse Shop / membership store
+- Looks like: a lookalike of `shop.weverse.io` selling "discounted ARMY
+  membership" or merch presale access, e.g. `weverse-shop.net`.
+- Why it works: fans know membership unlocks presale registration, so a
+  "cheaper, instant" membership is tempting right before onsale.
+- Red flags: domain fails allowlist matching; membership is sold only on
+  `shop.weverse.io`; "instant presale activation" is not a real product.
+
+## P12. Membership resale / account transfer
+- Looks like: "Selling my ARMY membership with presale registration done -
+  I'll give you the login." Korean: 멤버십 양도.
+- Why it works: the registration window is closed, so buying someone's
+  registered account feels like the only way in.
+- Red flags: memberships bind to the buyer's own account and are not
+  transferable; the seller keeps account recovery and can take it back;
+  buying a login is also credential theft in reverse.
+
+## P13. Messenger open-chat ticket sale
+- Looks like: "양도해요" posts in KakaoTalk open chats, LINE, or Telegram -
+  "2 seats, deposit first (선입금), QR right after payment".
+- Why it works: Korean-language fan spaces feel safer than anonymous global
+  platforms, and the chat moves fast.
+- Red flags: anonymous chat admin; deposit before any proof; pressure to
+  move to a 1:1 chat; the "ticket" arrives only after payment, if at all.
+  The language of the lure changes nothing: deposit-first plus QR-after is
+  P6 plus an unsafe rail (P3).
+
+## P14. Wallet-pass "transfer"
+- Looks like: "I'll AirDrop you the Apple/Google Wallet pass as soon as you
+  pay." The pass looks exactly like a real ticket.
+- Why it works: a wallet pass feels more real than a screenshot.
+- Red flags: a copied pass is not an account transfer; official tickets move
+  only inside the issuing platform, from the seller's account to the buyer's
+  own account. The same pass can be sent to many buyers and only the first
+  scan enters.

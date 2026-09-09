@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Schema and freshness validation for sevensignal trust data and eval fixtures.
 
-Checks skills/bts-ticket-safety/data/official-domains.yaml against the rules in
-CONTRIBUTING.md and SKILL.md, plus the eval fixture files against the schema in
-evals/README.md. Also parses every other YAML file in the repo for basic sanity.
+Checks every skills/*/data/official-domains.yaml against the rules in
+CONTRIBUTING.md and SKILL.md, plus every skills/*/evals fixture file against
+the schema in evals/README.md. Also parses every other YAML file in the repo
+for basic sanity.
 
 Staleness fail-safe (the "data older than 30 days triggers warnings" rule):
   Every allowlist entry whose last_verified is more than --max-age-days old,
@@ -34,9 +35,25 @@ except ImportError:
     raise SystemExit(3)
 
 REPO_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-SKILL_DIR = os.path.join(REPO_ROOT, "skills", "bts-ticket-safety")
-ALLOWLIST = os.path.join(SKILL_DIR, "data", "official-domains.yaml")
-EVALS_DIR = os.path.join(SKILL_DIR, "evals")
+SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
+
+
+def discover_allowlists():
+    out = []
+    for name in sorted(os.listdir(SKILLS_DIR)):
+        path = os.path.join(SKILLS_DIR, name, "data", "official-domains.yaml")
+        if os.path.isfile(path):
+            out.append(path)
+    return out
+
+
+def discover_eval_dirs():
+    out = []
+    for name in sorted(os.listdir(SKILLS_DIR)):
+        path = os.path.join(SKILLS_DIR, name, "evals")
+        if os.path.isdir(path):
+            out.append(path)
+    return out
 
 DOMAIN_RE = re.compile(r"^(?=.{1,253}$)([a-z0-9](-?[a-z0-9])*\.)+[a-z]{2,63}$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -78,12 +95,12 @@ def host_matches(host, domain):
     return host == domain or host.endswith("." + domain)
 
 
-def validate_allowlist(today, max_age_days):
+def validate_allowlist(path, today, max_age_days):
     try:
-        with open(ALLOWLIST, encoding="utf-8") as fh:
+        with open(path, encoding="utf-8") as fh:
             data = yaml.safe_load(fh)
     except (OSError, yaml.YAMLError) as exc:
-        err(f"official-domains.yaml: cannot load: {exc}")
+        err(f"{path}: cannot load: {exc}")
         return []
 
     if not isinstance(data, dict):
@@ -259,8 +276,9 @@ def validate_yaml_parses():
             if not fname.endswith((".yml", ".yaml")):
                 continue
             path = os.path.join(root, fname)
-            if os.path.abspath(path) in (os.path.abspath(ALLOWLIST),) or \
-               os.path.dirname(os.path.abspath(path)) == os.path.abspath(EVALS_DIR):
+            if os.path.abspath(path) in {
+                    os.path.abspath(a) for a in discover_allowlists()} or \
+               os.path.basename(os.path.dirname(os.path.abspath(path))) == "evals":
                 continue  # schema-validated above
             try:
                 with open(path, encoding="utf-8") as fh:
@@ -281,11 +299,16 @@ def main(argv=None):
     today = (datetime.date.fromisoformat(args.today) if args.today
              else datetime.date.today())
 
-    entries = validate_allowlist(today, args.max_age_days)
+    entries = []
+    for allowlist_path in discover_allowlists():
+        entries.extend(validate_allowlist(allowlist_path, today,
+                                          args.max_age_days))
     tier1_domains = [e["domain"] for e in entries if e["tier"] == 1]
-    for fname in sorted(os.listdir(EVALS_DIR)):
-        if fname.endswith(".yaml"):
-            validate_eval_file(os.path.join(EVALS_DIR, fname), tier1_domains)
+    for evals_dir in discover_eval_dirs():
+        for fname in sorted(os.listdir(evals_dir)):
+            if fname.endswith(".yaml"):
+                validate_eval_file(os.path.join(evals_dir, fname),
+                                   tier1_domains)
     validate_yaml_parses()
 
     for w in warnings:

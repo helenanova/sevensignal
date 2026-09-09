@@ -44,3 +44,54 @@ cases:
       verdict: OFFICIAL
       must_mention: ["weverse.io", "bts.ibighit.com"]
     rationale: Answer routes the fan to Tier 1 channels, not third parties.
+
+  - id: golden-06
+    input: |
+      Fan: "The Goyang notice sends Korean buyers to
+      https://tickets.interpark.com/ - is that the real NOL Ticket page?"
+    context: Current tour notice names NOL Ticket for Korea and links
+      tickets.interpark.com (weverse.io/bts/notice/33269).
+    expected:
+      verdict: OFFICIAL_SELLER
+      must_mention: ["tickets.interpark.com", "confirmed for this tour"]
+    rationale: Exact allowlisted domain, confirmed by a Tier 1 notice for the
+      current tour. Note the 's' - ticket.interpark.com would not match.
+  - id: golden-07
+    input: |
+      Fan: "The tour notice links London tickets to
+      https://www.ticketmaster.co.uk/ - safe to buy there?"
+    context: The NA & Europe notice names Ticketmaster, and the London show
+      sits on the UK storefront.
+    expected:
+      verdict: OFFICIAL_SELLER
+      must_mention: ["ticketmaster.co.uk"]
+    rationale: Allowlisted UK storefront, confirmed_tier1 for the current
+      tour; the leading www. is normalized away.
+  - id: golden-08
+    input: |
+      Fan: "Is the tour announcement on https://hybecorp.com/ an official
+      source?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["hybecorp.com", "tier 1"]
+    rationale: HYBE corporate site is Tier 1; corporate announcements are
+      official, though ticket links still resolve via tour notices.
+  - id: golden-09
+    input: |
+      Fan: "Where do I watch for the next presale registration window?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["weverse.io", "bts.ibighit.com"]
+    rationale: Routing answer must point to Tier 1 channels only.
+  - id: golden-10
+    input: |
+      Fan: "Got the international buyer link from the notice:
+      https://www.world.nol.com/en/ticket - is this the official NOL World
+      page?"
+    context: Current tour notice names NOL World for international buyers of
+      the Korea dates.
+    expected:
+      verdict: OFFICIAL_SELLER
+      must_mention: ["world.nol.com"]
+    rationale: The leading www. is stripped before matching, so
+      www.world.nol.com matches the allowlisted world.nol.com.

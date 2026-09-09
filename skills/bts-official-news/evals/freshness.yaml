@@ -1,0 +1,16 @@
+# Freshness cases: news claims that expire and must be re-read at the source.
+suite: freshness
+last_reviewed: 2026-09-08
+claim_classes:
+  - id: freshness-01
+    claim_type: tour dates, cities, and onsale announcements
+    example_input: "What are the newly announced dates?"
+    recheck_at: ["https://bts.ibighit.com/eng/tour/", "https://weverse.io/bts/notice"]
+    stale_rule: Any date or announcement not read today on a Tier 1 public
+      page is STALE; name the exact page to re-check.
+  - id: freshness-02
+    claim_type: rumored or leaked schedules
+    example_input: "Is the leaked second-leg schedule right?"
+    recheck_at: ["https://bts.ibighit.com/eng/tour/"]
+    stale_rule: Rumors are never freshness-checked into truth. Until a Tier 1
+      page carries it, the answer is UNVERIFIED, today and every day.

@@ -57,8 +57,8 @@ the authoritative schema validation with PyYAML.
 
 ## validate_data.py
 
-Checks `official-domains.yaml` against the CONTRIBUTING evidence rules as
-executable constraints:
+Checks every `skills/*/data/official-domains.yaml` against the CONTRIBUTING
+evidence rules as executable constraints, and every `skills/*/evals/` fixture:
 
 - every entry has domain, role, regions, verified_source (https), last_verified
 - a Tier 2 entry's verified_source must be on a Tier 1 domain ("Tier 1 confirms
@@ -75,7 +75,9 @@ older than `--max-age-days` (default 30) prints a WARNING. Exit codes:
 
 ## eval_runner.py
 
-Runs the eval suites in `skills/bts-ticket-safety/evals/`. Two explicit tiers:
+Runs the eval suites in every `skills/*/evals/` directory. Skills without their
+own allowlist match against the union of all skills' allowlists (Tier 1
+domains are project-wide). Two explicit tiers:
 
 - **Deterministic**: golden cases with URLs - every extracted host must match
   the allowlist and the matcher verdict must equal the expected verdict;
@@ -91,8 +93,8 @@ Runs the eval suites in `skills/bts-ticket-safety/evals/`. Two explicit tiers:
 
 ## check_links.py
 
-Probes every URL cited by `official-domains.yaml` (verified_source) and
-`evals/freshness.yaml` (recheck_at): HEAD first, GET fallback. OK = 2xx/3xx,
+Probes every URL cited by each skill's `official-domains.yaml`
+(verified_source) and `evals/freshness.yaml` (recheck_at): HEAD first, GET fallback. OK = 2xx/3xx,
 WARN = 401/403/429 (usually bot mitigation - needs a human spot check, not an
 automatic data change), FAIL = 404/410/5xx/timeout/DNS error (the citation is
 dead). `--fail` exits 1 on any FAIL.

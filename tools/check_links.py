@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Liveness check for the official source URLs the trust data relies on.
 
-Checks every verified_source in official-domains.yaml and every URL in the
-freshness evals' recheck_at lists. Standard library only.
+Checks every verified_source in each skill's official-domains.yaml and every
+URL in each skill's freshness evals' recheck_at lists. Standard library only.
 
 Classification:
   OK    2xx/3xx response
@@ -23,9 +23,22 @@ import urllib.error
 import urllib.request
 
 REPO_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-SKILL_DIR = os.path.join(REPO_ROOT, "skills", "bts-ticket-safety")
-ALLOWLIST = os.path.join(SKILL_DIR, "data", "official-domains.yaml")
-FRESHNESS = os.path.join(SKILL_DIR, "evals", "freshness.yaml")
+SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
+
+
+def check_files():
+    """Every allowlist and freshness fixture across all skills."""
+    out = []
+    for name in sorted(os.listdir(SKILLS_DIR)):
+        for rel, label in (
+                (os.path.join("data", "official-domains.yaml"),
+                 f"{name}/official-domains.yaml"),
+                (os.path.join("evals", "freshness.yaml"),
+                 f"{name}/freshness.yaml")):
+            path = os.path.join(SKILLS_DIR, name, rel)
+            if os.path.isfile(path):
+                out.append((path, label))
+    return out
 
 USER_AGENT = ("sevensignal-link-check/0.1 "
               "(+https://github.com/helenanova/sevensignal)")
@@ -40,8 +53,7 @@ def collect_urls():
     # recheck_at lists). A general extractor keeps block- and flow-style YAML
     # covered without depending on the file's exact shape.
     urls = []  # (url, where)
-    for path, label in ((ALLOWLIST, "official-domains.yaml"),
-                        (FRESHNESS, "freshness.yaml")):
+    for path, label in check_files():
         try:
             with open(path, encoding="utf-8") as fh:
                 text = fh.read()

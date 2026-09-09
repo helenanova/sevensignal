@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Eval runner for the bts-ticket-safety suites.
+"""Eval runner for every skills/*/evals suite in the repo.
 
 Two explicit tiers of rigor, reported separately:
 
@@ -43,9 +43,20 @@ except ImportError:
     raise SystemExit(3)
 
 REPO_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-SKILL_DIR = os.path.join(REPO_ROOT, "skills", "bts-ticket-safety")
-ALLOWLIST = os.path.join(SKILL_DIR, "data", "official-domains.yaml")
-EVALS_DIR = os.path.join(SKILL_DIR, "evals")
+SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
+
+
+def discover_skills():
+    """Every skills/<name>/ directory that ships an evals/ folder."""
+    skills = []
+    for name in sorted(os.listdir(SKILLS_DIR)):
+        skill_dir = os.path.join(SKILLS_DIR, name)
+        evals_dir = os.path.join(skill_dir, "evals")
+        allowlist = os.path.join(skill_dir, "data", "official-domains.yaml")
+        if os.path.isdir(evals_dir):
+            skills.append((name, evals_dir,
+                           allowlist if os.path.isfile(allowlist) else None))
+    return skills
 
 URL_RE = re.compile(r"https?://[^\s)\]>'\"]+")
 BARE_DOMAIN_RE = re.compile(r"\b(?:[a-z0-9](?:-?[a-z0-9])*\.)+[a-z]{2,}\b")
@@ -126,7 +137,16 @@ def main(argv=None):
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
-    entries = dm.load_allowlist_entries(ALLOWLIST)
+    skills = discover_skills()
+    # Skills without their own allowlist share the union of every skill's
+    # entries (Tier 1 domains are project-wide). Skills with their own
+    # data/official-domains.yaml match against that file.
+    all_entries = []
+    per_skill = {}
+    for name, _evals_dir, allowlist in skills:
+        if allowlist:
+            per_skill[name] = dm.load_allowlist_entries(allowlist)
+            all_entries.extend(per_skill[name])
     answers = {}
     if args.answers:
         with open(args.answers, encoding="utf-8") as fh:
@@ -134,48 +154,53 @@ def main(argv=None):
 
     report = {"deterministic": [], "llm_judged": [], "answers_scored": []}
     failures = 0
-    for fname in sorted(os.listdir(EVALS_DIR)):
-        if not fname.endswith(".yaml"):
-            continue
-        with open(os.path.join(EVALS_DIR, fname), encoding="utf-8") as fh:
-            suite = yaml.safe_load(fh)
-        if suite.get("suite") == "freshness":
-            for cls in suite.get("claim_classes") or []:
-                report["llm_judged"].append({
-                    "id": cls["id"], "suite": "freshness",
-                    "why": "freshness behavior needs a live agent run",
-                    "expectation": cls.get("stale_rule", ""),
-                })
-            continue
-        for case in suite.get("cases") or []:
-            checks, fully = run_deterministic(case, entries)
-            if fully:
-                ok = all(p for _n, p, _d in checks)
-                if not ok:
-                    failures += 1
-                report["deterministic"].append({
-                    "id": case["id"], "result": "PASS" if ok else "FAIL",
-                    "checks": [{"check": n, "pass": p, "detail": d}
-                               for n, p, d in checks],
-                })
-            else:
-                report["llm_judged"].append({
-                    "id": case["id"], "suite": suite["suite"],
-                    "why": "verdict depends on prose screening / refusal rules",
-                    "expectation": (case.get("expected") or {}).get("verdict"),
-                    "automated_subchecks": [
-                        {"check": n, "pass": p, "detail": d}
-                        for n, p, d in checks] or None,
-                })
-                if any(not p for _n, p, _d in checks):
-                    failures += 1
-            if case["id"] in answers:
-                report["answers_scored"].append({
-                    "id": case["id"],
-                    "checks": [{"check": n, "pass": p}
-                               for n, p in score_with_answers(
-                                   case, answers[case["id"]])],
-                })
+    for skill_name, evals_dir, allowlist in skills:
+        entries = per_skill.get(skill_name) or all_entries
+        for fname in sorted(os.listdir(evals_dir)):
+            if not fname.endswith(".yaml"):
+                continue
+            with open(os.path.join(evals_dir, fname), encoding="utf-8") as fh:
+                suite = yaml.safe_load(fh)
+            if suite.get("suite") == "freshness":
+                for cls in suite.get("claim_classes") or []:
+                    report["llm_judged"].append({
+                        "id": cls["id"], "suite": "freshness",
+                        "skill": skill_name,
+                        "why": "freshness behavior needs a live agent run",
+                        "expectation": cls.get("stale_rule", ""),
+                    })
+                continue
+            for case in suite.get("cases") or []:
+                checks, fully = run_deterministic(case, entries)
+                if fully:
+                    ok = all(p for _n, p, _d in checks)
+                    if not ok:
+                        failures += 1
+                    report["deterministic"].append({
+                        "id": case["id"], "skill": skill_name,
+                        "result": "PASS" if ok else "FAIL",
+                        "checks": [{"check": n, "pass": p, "detail": d}
+                                   for n, p, d in checks],
+                    })
+                else:
+                    report["llm_judged"].append({
+                        "id": case["id"], "suite": suite["suite"],
+                        "skill": skill_name,
+                        "why": "verdict depends on prose screening / refusal rules",
+                        "expectation": (case.get("expected") or {}).get("verdict"),
+                        "automated_subchecks": [
+                            {"check": n, "pass": p, "detail": d}
+                            for n, p, d in checks] or None,
+                    })
+                    if any(not p for _n, p, _d in checks):
+                        failures += 1
+                if case["id"] in answers:
+                    report["answers_scored"].append({
+                        "id": case["id"],
+                        "checks": [{"check": n, "pass": p}
+                                   for n, p in score_with_answers(
+                                       case, answers[case["id"]])],
+                    })
 
     n_det = len(report["deterministic"])
     n_llm = len(report["llm_judged"])
@@ -184,14 +209,14 @@ def main(argv=None):
     else:
         print("== Deterministic checks (run in CI) ==")
         for item in report["deterministic"]:
-            print(f"  [{item['result']}] {item['id']}")
+            print(f"  [{item['result']}] {item['skill']}/{item['id']}")
             for c in item["checks"]:
                 mark = "ok" if c["pass"] else "XX"
                 detail = f" - {c['detail']}" if c["detail"] else ""
                 print(f"      {mark} {c['check']}{detail}")
         for item in report["llm_judged"]:
             if item.get("automated_subchecks"):
-                print(f"  [sub-checks] {item['id']}")
+                print(f"  [sub-checks] {item['skill']}/{item['id']}")
                 for c in item["automated_subchecks"]:
                     mark = "ok" if c["pass"] else "XX"
                     print(f"      {mark} {c['check']}")
@@ -199,8 +224,8 @@ def main(argv=None):
         print(f"== LLM-judged cases (NOT run here; need an agent applying "
               f"SKILL.md) ==  {n_llm} case(s)")
         for item in report["llm_judged"]:
-            print(f"  - {item['id']} ({item['suite']}): expect "
-                  f"{item.get('expectation', 'n/a')}")
+            print(f"  - {item['skill']}/{item['id']} ({item['suite']}): "
+                  f"expect {item.get('expectation', 'n/a')}")
         if report["answers_scored"]:
             print()
             print("== Offline answer scoring (--answers) ==")

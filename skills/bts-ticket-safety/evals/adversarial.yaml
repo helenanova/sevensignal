@@ -66,3 +66,97 @@ cases:
       verdict: SCAM_INDICATORS
       must_mention: ["QR", "sold to many"]
     rationale: QR resale (P6). One code can be sold repeatedly.
+
+  - id: adversarial-09
+    input: |
+      Fan: "카카오톡 오픈채팅에서 'BTS 고양 콘서트 2연석 양도해요. 선입금하면 바로 QR 보내드릴게요'라는 글을 봤어요. 믿어도 될까요?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["선입금", "QR"]
+    rationale: Messenger open-chat sale (P13) plus QR resale (P6). Deposit
+      first, ticket "later", anonymous chat admin.
+  - id: adversarial-10
+    input: |
+      Fan: "인터파크 글로벌 사이트라면서 nol-ticket.com 링크를 보내왔어요. 여기서 결제해도 될까요?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["does not match", "world.nol.com"]
+    rationale: Lookalike domain (P1) imitating NOL Ticket. nol-ticket.com is
+      not the allowlisted world.nol.com; Korean-language lures get the same
+      deterministic matching as English ones.
+  - id: adversarial-11
+    input: |
+      Fan: "Found a site called weverse-shop.net selling discounted ARMY
+      membership with 'instant presale activation'. Legit?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["shop.weverse.io", "does not match"]
+    rationale: Fake Weverse Shop (P11). Membership is sold only on
+      shop.weverse.io; the lookalike domain fails allowlist matching.
+  - id: adversarial-12
+    input: |
+      Fan: "Someone is selling their Weverse ARMY membership account with
+      presale registration already done, $150. They said they'd give me the
+      login. Good deal?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["membership", "not transferable"]
+    rationale: Membership resale (P12). Memberships bind to the buyer's own
+      account and are not transferable; a handed-over login can be recovered
+      by the seller at any time.
+  - id: adversarial-13
+    input: |
+      Fan: "A seller says they will AirDrop me an Apple Wallet BTS ticket
+      pass right after I pay. That's a real ticket transfer, right?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["wallet", "sold to many"]
+    rationale: Wallet-pass transfer offer (P14). A copied pass is not an
+      account transfer; the same pass can be sent to many buyers and only
+      the first scan enters.
+  - id: adversarial-14
+    input: |
+      Fan: "A resale marketplace lists BTS floor seats marked 'official
+      verified resale' at 5x face value. Official means safe, right?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["resale", "Tier 1 notice"]
+    rationale: >
+      "Official resale" confusion (P9). The words mean nothing unless
+      a Tier 1 notice names that marketplace as the official resale channel
+      for this tour.
+  - id: adversarial-15
+    input: |
+      Fan: "An Instagram account called bts.ticketing.official DMed me:
+      'You were selected for early access. Pay the deposit today to lock your
+      seats.' Real?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["DM", "never sell"]
+    rationale: Impersonated official account (P8) with deposit pressure (P13).
+      Official channels never sell or take deposits by DM.
+  - id: adversarial-16
+    input: |
+      Fan: "검색 포털에서 'NOL 티켓 고객센터'를 찾았더니 070 번호가 광고로 떴어요. 예매 문제를 여기에 문의해도 될까요?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["고객센터", "공식 사이트"]
+    rationale: Fake customer support (P10), Korean search-ad vector. Support
+      contact only via the official site's own help pages.
+  - id: adversarial-17
+    input: |
+      Fan: "대리티켓팅 업체가 위버스 아이디와 비밀번호를 알려주면 성공률 90%로 예매를 대신해준대요. 맡겨도 될까요?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["비밀번호", "계정"]
+    rationale: Proxy ticketing service demanding the fan's Weverse credentials
+      (P7-style credential theft plus account rules). Handing over a password
+      loses the account, not just the tickets.
+  - id: adversarial-18
+    input: |
+      Fan: "카카오톡으로 '위버스 멤버십 인증 만료 예정'이라는 메시지와 weverse-membership.kr 링크가 왔어요."
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["phishing", "weverse.io"]
+    rationale: Account-verification phishing (P7) over KakaoTalk. The domain
+      weverse-membership.kr is not weverse.io and fails allowlist matching.

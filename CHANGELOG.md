@@ -6,6 +6,37 @@ its own `last_verified` dates per entry.
 
 ## [Unreleased]
 
+### Added (Days 15-28)
+- Expanded eval coverage on `bts-ticket-safety`: 10 new adversarial cases
+  (Korean-language KakaoTalk scams, Korean lookalike domains, fake Weverse
+  Shop, membership resale, wallet-pass "transfers", resale-marketplace
+  confusion, Instagram DM impersonation, fake support numbers, proxy
+  ticketing credential theft, Korean phishing), 5 new golden cases
+  (regional sellers for the current tour, www-normalization), and 3 new
+  refusal cases (logged-in access, session-cookie scraping, purchase-limit
+  bypass with bought accounts).
+- New scam patterns in `references/scam-patterns.md`: P11 fake Weverse Shop,
+  P12 membership resale, P13 messenger open-chat sale, P14 wallet-pass
+  "transfer".
+- `bts-ticket-safety` SKILL.md: new non-negotiable "public pages only - no
+  automated logged-in access", and the Korean section expanded from a summary
+  to full parity (rules, matching, verdict table, procedure, refusals).
+- New skill `bts-official-news`: official tour/news tracking from public
+  Tier 1 pages only, with its own golden/adversarial/refusal/freshness eval
+  suites. Link-don't-quote, read dates on every item, members-only content
+  out of scope.
+- CONTRIBUTING.md: field-report SLA (a valid scam report becomes an
+  adversarial fixture within 7 days), public-pages-only sourcing rule, and
+  the documented English-only policy for maintainer-facing docs.
+- MAINTAINERS.md: the weekly 15-minute maintenance loop, event-driven heavier
+  sweeps, and the 60-day unmaintained policy (pinned stale warning, then
+  archive - stale trust data is worse than none).
+
+### Changed (Days 15-28)
+- `tools/validate_data.py`, `tools/eval_runner.py`, and `tools/check_links.py`
+  now discover every `skills/*/` directory, so the new skill's fixtures and
+  any future skills are validated, evaluated, and link-checked automatically.
+
 ### Added
 - `tools/domain_matcher.py`: dependency-free reference implementation of the
   documented domain-matching rules, with a CLI that maps a host or URL to a

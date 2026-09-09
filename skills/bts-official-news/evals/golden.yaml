@@ -1,0 +1,20 @@
+# Golden cases: official-source situations the skill must recognize.
+suite: golden
+cases:
+  - id: golden-01
+    input: |
+      Fan: "Is the announcement at https://bts.ibighit.com/eng/tour/ the
+      official tour page?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["bts.ibighit.com", "official"]
+    rationale: bts.ibighit.com is a Tier 1 domain; the tour page is the
+      canonical source for tour announcements.
+  - id: golden-02
+    input: |
+      Fan: "Where will the next BTS tour announcement appear?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["bts.ibighit.com", "weverse.io"]
+    rationale: Routing answer must name Tier 1 public pages only, never fan
+      accounts or aggregators.

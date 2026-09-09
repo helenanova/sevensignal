@@ -4,7 +4,8 @@ Fan-built agent skills for BTS fans. English-first, with Korean summaries.
 
 팬이 만든 BTS 팬용 에이전트 스킬 모음입니다. 영어가 기본이며 한국어 요약을 함께 제공합니다.
 
-**Status:** M0 - first public release. One skill (bts-ticket-safety) is complete and tested; more skills are on the roadmap.
+**Status:** v0.1.0 is released. Two skills: bts-ticket-safety (complete and
+tested) and bts-official-news (new, unreleased). Community validation is next.
 
 ## What this is
 
@@ -41,11 +42,12 @@ sevensignal/
   CONTRIBUTING.md             content and evidence rules for contributors
   CODE_OF_CONDUCT.md          contributor covenant
   CHANGELOG.md                release history
+  MAINTAINERS.md              the weekly maintenance loop and unmaintained policy
   .github/                    issue forms, pull request template, CI workflows
   tools/                      executable checks (matcher, validators, eval runner)
   skills/
     bts-ticket-safety/
-      SKILL.md                the skill definition (English + Korean summary)
+      SKILL.md                the skill definition (English + full Korean guidance)
       data/
         official-domains.yaml deterministic allowlist of official domains
       references/
@@ -57,6 +59,9 @@ sevensignal/
         adversarial.yaml      scam scenarios -> expected scam verdicts
         refusal.yaml          out-of-scope asks -> expected refusals
         freshness.yaml        claims that expire -> re-verification rules
+    bts-official-news/
+      SKILL.md                official tour/news tracking, public pages only
+      evals/                  golden, adversarial, refusal, freshness suites
 ```
 
 ## Verify the trust data locally
@@ -80,8 +85,11 @@ a weekly workflow re-checks data freshness and source links and opens one
 
 ## Roadmap (not built yet)
 
-- Tour news tracking from official notices only
-- Fan community safety (Discord/X impersonation detection)
+- Fan community safety (Discord/X impersonation detection) - deliberately
+  deferred: impersonation judgment carries real defamation risk and needs
+  more design before it ships as a deterministic skill.
+- v0.2.0 after community validation: soft-launch feedback triaged, field
+  reports turned into fixtures, all `last_verified` dates re-checked.
 
 ## License
 

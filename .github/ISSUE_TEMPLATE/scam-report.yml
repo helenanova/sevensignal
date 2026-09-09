@@ -9,6 +9,9 @@ body:
         Remove all personal information (yours and other victims') before
         submitting. Fictionalized examples only. Never include passwords,
         order numbers, or real account details.
+
+        Valid reports become adversarial eval fixtures within 7 days
+        (see CONTRIBUTING.md - field-report SLA).
   - type: textarea
     id: scam_text
     attributes:

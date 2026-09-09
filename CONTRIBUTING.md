@@ -10,9 +10,15 @@ Welcome. These rules keep the project safe for fans.
    must cite an official source URL and a `last_verified` date. Fan blogs and
    forums can inform research but are never citations.
 3. **English-first, Korean summaries.** Write the canonical text in English. Add a
-   Korean summary (한국어 요약) to any user-facing section.
+   Korean summary (한국어 요약) to any user-facing section; SKILL.md user-facing
+   safety guidance carries full Korean parity. Maintainer-facing docs
+   (CONTRIBUTING, SECURITY, MAINTAINERS) stay English-only.
 4. **Plain words.** Short sentences. No hype, no fandom jargon in safety-critical
    instructions.
+5. **Public pages only.** Verify and cite only publicly accessible official
+   pages. Never use logged-in, members-only, or paid content as a source, and
+   never automate access to any fan account. If a fact is only visible behind
+   a login, it is not citable here.
 
 ## Changing the allowlist
 
@@ -52,3 +58,19 @@ Any change to verdicts, procedures, or refusals must ship with eval fixtures:
 
 Run all four suites before proposing the change. A change that breaks existing
 fixtures needs a written reason in the pull request.
+
+## Field reports and the fixture SLA
+
+Scam reports come in through the scam-report issue form. For every report:
+
+1. Acknowledge within 3 days where possible.
+2. Judge validity: the pattern is real, reproducible from the report, and
+   stripped of all personal information (yours, victims', and the scammer's
+   real handles - fixtures are fictional by rule).
+3. **A valid report becomes an adversarial eval fixture within 7 days.** If it
+   reveals a genuinely new pattern, add it to `references/scam-patterns.md` in
+   the same change (CONTRIBUTING rule: new pattern -> adversarial cases).
+4. Invalid or unactionable reports get a short, kind close with the reason.
+
+If the SLA slips (no maintainer time), say so on the issue instead of letting
+it age silently. See MAINTAINERS.md for the weekly loop that keeps this honest.
