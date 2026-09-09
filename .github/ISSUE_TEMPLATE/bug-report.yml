@@ -1,0 +1,19 @@
+name: Bug report
+description: Something in the skill, docs, or evals is wrong or broken.
+title: "[Bug]: <short description>"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: where
+    attributes:
+      label: Where
+      description: File, eval case id, or section involved.
+    validations:
+      required: false

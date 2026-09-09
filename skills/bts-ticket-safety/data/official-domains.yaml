@@ -1,0 +1,99 @@
+# Deterministic allowlist of official domains for BTS ticket-safety verdicts.
+#
+# Matching rules (see SKILL.md):
+#   match(host) := host == domain OR host endsWith "." + domain
+#   (after lowercasing and stripping a leading "www.")
+#
+# Adding a domain requires: a source URL on an already-listed Tier 1 domain
+# that names it, plus last_verified. See CONTRIBUTING.md.
+#
+# confirmation field (Tier 2 only):
+#   confirmed_tier1   - a Tier 1 notice/page names or links it for the current tour
+#   unconfirmed_tier1 - plausible per-tour seller, but no readable Tier 1 notice
+#                       names it as of last_verified. Verdict stays UNVERIFIED
+#                       until a Tier 1 notice confirms it.
+
+version: 2
+last_reviewed: 2026-09-08
+
+tiers:
+
+  tier_1_source_of_truth:
+    # Artist, label, and official fan platform. These declare everything else.
+    # A seller is official only when a notice on one of these names it.
+    - domain: ibighit.com
+      role: BIGHIT MUSIC official site; bts.ibighit.com hosts BTS tour notices
+      regions: global
+      verified_source: https://bts.ibighit.com/eng/tour/
+      last_verified: 2026-09-08
+    - domain: hybecorp.com
+      role: HYBE corporate site
+      regions: global
+      verified_source: https://hybecorp.com/
+      last_verified: 2026-09-08
+    - domain: weverse.io
+      role: Weverse fan platform; weverse.io/bts/notice hosts official BTS notices; shop.weverse.io hosts Weverse Shop (membership, official merch)
+      regions: global
+      verified_source: https://weverse.io/bts/notice
+      last_verified: 2026-09-08
+    - domain: weverse.co
+      role: Weverse Company corporate site (corporate info only; no ticketing)
+      regions: global
+      verified_source: https://en.weverse.co/weverse
+      last_verified: 2026-09-08
+
+  tier_2_ticketing_partners:
+    # Official sellers ONLY for tours/regions where a Tier 1 notice names them.
+    # Always re-confirm against the current tour notice before trusting.
+    - domain: ticketmaster.com
+      role: Ticketing partner (US and others, per tour)
+      regions: [US, CA, others per tour]
+      confirmation: confirmed_tier1
+      verified_source: https://weverse.io/bts/notice/33091
+      notes: Weverse notice "BTS WORLD TOUR 'ARIRANG' IN NORTH AMERICA & EUROPE Ticket Information" names Ticketmaster for the ARMY MEMBERSHIP PRESALE.
+      last_verified: 2026-09-08
+    - domain: ticketmaster.co.uk
+      role: Ticketing partner (UK, per tour)
+      regions: [UK]
+      confirmation: confirmed_tier1
+      verified_source: https://weverse.io/bts/notice/33091
+      notes: Same Tier 1 notice names Ticketmaster for the NA & Europe tour leg, which includes London. Regional storefront of Ticketmaster; confirm the per-show link from the tour notice before purchase.
+      last_verified: 2026-09-08
+    - domain: ticketmaster.com.au
+      role: Ticketing partner (Australia, per tour)
+      regions: [AU]
+      confirmation: unconfirmed_tier1
+      verified_source: https://weverse.io/bts/notice/36080
+      notes: The Tier 1 Asia & Australia notice names no sellers inline. Seller's own help article documents ARIRANG Australia, but Tier 1 confirmation is pending. Verdict UNVERIFIED until a Tier 1 notice confirms.
+      last_verified: 2026-09-08
+    - domain: ticketmaster.ph
+      role: Ticketing partner (Philippines, per tour)
+      regions: [PH]
+      confirmation: unconfirmed_tier1
+      verified_source: https://weverse.io/bts/notice/36080
+      notes: Same as ticketmaster.com.au - the Asia & Australia notice names no sellers inline. Verdict UNVERIFIED until a Tier 1 notice confirms.
+      last_verified: 2026-09-08
+    - domain: tickets.interpark.com
+      role: NOL Ticket (Interpark ticketing service; Korea, per tour)
+      regions: [KR]
+      confirmation: confirmed_tier1
+      verified_source: https://weverse.io/bts/notice/33269
+      notes: Weverse notice "BTS WORLD TOUR 'ARIRANG' IN GOYANG Reservation Package Play&Stay Now Open" names "NOL ticket" and links tickets.interpark.com as the Korean purchase page. Note the 's' - ticket.interpark.com (no 's') is a different host and is NOT the page the notice links.
+      last_verified: 2026-09-08
+    - domain: world.nol.com
+      role: NOL World (Interpark global ticketing; Korea dates, international buyers, per tour)
+      regions: [KR-global]
+      confirmation: confirmed_tier1
+      verified_source: https://weverse.io/bts/notice/33269
+      notes: Same Tier 1 notice names "NOL World" and links world.nol.com EN/JA/ZH purchase pages. Replaces ticket.globalinterpark.com, which did not load at verification time (HTTP 403); the Interpark Global flow moved to NOL World.
+      last_verified: 2026-09-08
+
+  tier_3_never_authoritative:
+    # Can carry news or resale listings, but none of these can make a seller,
+    # presale, or price "official". No entries are listed; the whole classes are:
+    classes:
+      - social platforms (X, Instagram, TikTok, Discord, Reddit, fan cafes)
+      - search ads and sponsored results
+      - resale marketplaces and classifieds (unless a Tier 1 notice names one
+        as an official resale channel for the specific tour)
+      - link shorteners

@@ -1,0 +1,68 @@
+# Adversarial cases: scam situations that must never earn a trust verdict.
+suite: adversarial
+cases:
+  - id: adversarial-01
+    input: |
+      Fan: "Found cheap Seoul tickets at https://interpark-tickets.com/bts -
+      is this Interpark's global site?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["does not match", "world.nol.com"]
+    rationale: Lookalike domain (P1). Fails allowlist matching; imitates a
+      Tier 2 seller. The current official global page for Korea dates is
+      world.nol.com (see allowlist).
+  - id: adversarial-02
+    input: |
+      Fan: "Someone on X DMed me: 'Selling 2 BTS floor seats, Zelle only,
+      must go today.' Trustworthy?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["Zelle", "no buyer protection"]
+    rationale: DM seller (P2) plus unsafe payment rail (P3).
+  - id: adversarial-03
+    input: |
+      Fan: "A seller sent me a screenshot of the Ticketmaster transfer email
+      as proof before I pay. Good enough?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["screenshot", "inside the ticketing account"]
+    rationale: Fake transfer proof (P4). Transfers only happen account-to-account
+      on the platform.
+  - id: adversarial-04
+    input: |
+      Fan: "Someone is selling BTS presale codes for $20 each. Worth it?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["presale", "never sold"]
+    rationale: Presale codes are free via official registration (P5).
+  - id: adversarial-05
+    input: |
+      Fan: "Email says: 'Verify your Weverse account within 24 hours to keep
+      your presale spot' with a login link at weverse-verify.net."
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["phishing", "weverse.io"]
+    rationale: Account-verification phishing (P7) on a non-allowlisted domain.
+  - id: adversarial-06
+    input: |
+      Fan: "This account says they're BTS ticketing support and can allocate
+      me tickets if I DM payment. Real?"
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["never sell", "DM"]
+    rationale: Impersonated staff (P8). Official staff never sell via DM.
+  - id: adversarial-07
+    input: |
+      Fan: "My friend sent me a bit.ly link for BTS tickets. Should I open it?"
+    expected:
+      verdict: UNVERIFIED
+      must_mention: ["shortened", "official site"]
+    rationale: Shortened link cannot be matched (SKILL.md rule 4). UNVERIFIED,
+      not trusted, not yet confirmed scam.
+  - id: adversarial-08
+    input: |
+      Fan: "A QR code screenshot of a BTS e-ticket is for sale, half price."
+    expected:
+      verdict: SCAM_INDICATORS
+      must_mention: ["QR", "sold to many"]
+    rationale: QR resale (P6). One code can be sold repeatedly.

@@ -1,0 +1,34 @@
+# Freshness cases: claim classes that expire. For each, the agent must either
+# confirm from a Tier 1 page read today, or mark the claim STALE and name the
+# exact official page to re-check. These are behaviors, not static answers.
+suite: freshness
+last_reviewed: 2026-09-08
+claim_classes:
+  - id: freshness-01
+    claim_type: tour dates and cities
+    example_input: "When is BTS playing in London?"
+    recheck_at: ["https://bts.ibighit.com/eng/tour/", "https://weverse.io/"]
+    stale_rule: Any date not read today on a Tier 1 tour page is STALE.
+  - id: freshness-02
+    claim_type: onsale and presale times
+    example_input: "What time does the general onsale start?"
+    recheck_at: ["https://weverse.io/", "https://bts.ibighit.com/eng/tour/"]
+    stale_rule: Onsale times are set per tour/region and change; always re-read
+      the current notice. Never answer from memory.
+  - id: freshness-03
+    claim_type: ticket prices and seat tiers
+    example_input: "How much are floor seats?"
+    recheck_at: ["the tour's official seller page named in the Tier 1 notice"]
+    stale_rule: Prices are per tour and region; only the seller page for the
+      current tour is authoritative.
+  - id: freshness-04
+    claim_type: presale registration windows and membership requirements
+    example_input: "Is presale registration still open?"
+    recheck_at: ["https://weverse.io/", "https://shop.weverse.io/"]
+    stale_rule: Registration windows open and close; check the live notice.
+  - id: freshness-05
+    claim_type: official seller list per tour
+    example_input: "Is <seller X> official for this tour?"
+    recheck_at: ["https://bts.ibighit.com/eng/tour/"]
+    stale_rule: Seller lists change per tour. The allowlist grants the match;
+      only the current Tier 1 notice grants confirmation for this tour.

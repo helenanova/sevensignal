@@ -1,0 +1,43 @@
+name: Allowlist change (add, correct, or remove a domain)
+description: Propose a change to official-domains.yaml. Evidence from a Tier 1 official domain is required.
+title: "[Allowlist]: <domain> - <add/correct/remove>"
+labels: ["allowlist"]
+body:
+  - type: input
+    id: domain
+    attributes:
+      label: Domain
+      description: The exact registrable domain (e.g. tickets.example.com).
+    validations:
+      required: true
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: Change type
+      options:
+        - Add
+        - Correct
+        - Remove
+    validations:
+      required: true
+  - type: input
+    id: source_url
+    attributes:
+      label: Official source URL
+      description: URL on an already-listed Tier 1 domain (ibighit.com, hybecorp.com, weverse.io, weverse.co) that names or links this domain.
+    validations:
+      required: true
+  - type: input
+    id: verified_date
+    attributes:
+      label: Date you verified the source
+      placeholder: YYYY-MM-DD
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Role, regions, and context
+      description: What this domain is for (seller, region, tour) and anything a reviewer should know.
+    validations:
+      required: true

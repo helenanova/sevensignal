@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security or trust-data problem
+    url: https://github.com/helenanova/sevensignal/security/advisories/new
+    about: Wrong or suspicious domain in the allowlist? Report it privately here, not in a public issue.

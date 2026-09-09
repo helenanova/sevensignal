@@ -1,0 +1,46 @@
+# Golden cases: legitimate situations that must earn trust, not suspicion.
+suite: golden
+cases:
+  - id: golden-01
+    input: |
+      Fan: "Is this the real BTS tour page? https://bts.ibighit.com/eng/tour/"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["ibighit.com", "tier 1"]
+    rationale: bts.ibighit.com is a subdomain of allowlisted ibighit.com.
+  - id: golden-02
+    input: |
+      Fan: "I want to buy Weverse membership for the presale. Is
+      shop.weverse.io the right place?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["shop.weverse.io", "weverse.io"]
+    rationale: shop.weverse.io matches weverse.io; membership and presale
+      registration flow through Weverse.
+  - id: golden-03
+    input: |
+      Fan: "The official tour notice links to Ticketmaster for the US dates.
+      The checkout URL starts with https://www.ticketmaster.com/. Safe to buy?"
+    context: Current tour notice on a Tier 1 page names Ticketmaster for the US.
+    expected:
+      verdict: OFFICIAL_SELLER
+      must_mention: ["ticketmaster.com", "confirmed for this tour"]
+    rationale: Tier 2 domain matched AND confirmed by Tier 1 for this tour.
+  - id: golden-04
+    input: |
+      Fan: "For the Goyang dates, the Weverse notice sends international buyers
+      to https://world.nol.com/en/ticket/places/26000041/products/26000600.
+      Is that legit?"
+    context: Current tour notice names NOL World for international buyers.
+    expected:
+      verdict: OFFICIAL_SELLER
+      must_mention: ["world.nol.com"]
+    rationale: Exact allowlisted domain, confirmed by Tier 1 notice
+      (weverse.io/bts/notice/33269 links world.nol.com purchase pages).
+  - id: golden-05
+    input: |
+      Fan: "Where will the presale registration dates be announced?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["weverse.io", "bts.ibighit.com"]
+    rationale: Answer routes the fan to Tier 1 channels, not third parties.

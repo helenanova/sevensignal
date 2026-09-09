@@ -1,0 +1,38 @@
+name: Scam the skill failed to catch
+description: Report a scam pattern so it can become an adversarial eval fixture.
+title: "[Scam]: <short description>"
+labels: ["scam-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Remove all personal information (yours and other victims') before
+        submitting. Fictionalized examples only. Never include passwords,
+        order numbers, or real account details.
+  - type: textarea
+    id: scam_text
+    attributes:
+      label: Scam text or description
+      description: The message, offer, or site content (sanitized). What verdict did the skill give, and what should it have given?
+    validations:
+      required: true
+  - type: input
+    id: domain
+    attributes:
+      label: Domain involved (if any)
+    validations:
+      required: false
+  - type: dropdown
+    id: channel
+    attributes:
+      label: Where did you encounter it?
+      options:
+        - Social media DM
+        - Social media post
+        - Search ad
+        - Website
+        - Messaging app
+        - Email
+        - Other
+    validations:
+      required: true
