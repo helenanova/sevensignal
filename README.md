@@ -7,6 +7,17 @@ Fan-built agent skills for BTS fans. English-first, with Korean summaries.
 **Status:** v0.1.0 is released. Two skills: bts-ticket-safety (complete and
 tested) and bts-official-news (new, unreleased). Community validation is next.
 
+## Install
+
+One command loads both skills into your agent through the
+[skills CLI](https://skills.sh/) (Claude Code, Codex, Cursor, and more):
+
+```bash
+npx skills add helenanova/sevensignal
+```
+
+![Demo: an agent with the ticket-safety skill flags a fictional KakaoTalk deposit scam as UNVERIFIED, then confirms the official Korean seller as OFFICIAL_SELLER](docs/demo.gif)
+
 ## What this is
 
 A collection of open-source skills that an AI agent can load to help BTS fans with
@@ -43,6 +54,7 @@ sevensignal/
   CODE_OF_CONDUCT.md          contributor covenant
   CHANGELOG.md                release history
   MAINTAINERS.md              the weekly maintenance loop and unmaintained policy
+  docs/                       demo GIF and social preview image (no product code)
   .github/                    issue forms, pull request template, CI workflows
   tools/                      executable checks (matcher, validators, eval runner)
   skills/

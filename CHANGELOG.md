@@ -6,6 +6,15 @@ its own `last_verified` dates per entry.
 
 ## [Unreleased]
 
+### Added (repo polish)
+- README: one-command install (`npx skills add helenanova/sevensignal`) and an
+  animated demo near the top; new `docs/` folder for visual assets.
+- `docs/demo.gif`: scripted terminal demo using verbatim matcher output - a
+  fictional KakaoTalk deposit scam is flagged UNVERIFIED, then the official
+  Korean seller is confirmed OFFICIAL_SELLER.
+- `docs/social-preview.png`: repository social preview image (text and
+  geometric motif only; no logos, photos, or protected artwork).
+
 ### Added (Days 15-28)
 - Expanded eval coverage on `bts-ticket-safety`: 10 new adversarial cases
   (Korean-language KakaoTalk scams, Korean lookalike domains, fake Weverse
