@@ -4,7 +4,7 @@ All notable changes to this project are documented here. Dates are UTC.
 The trust data in `skills/bts-ticket-safety/data/official-domains.yaml` carries
 its own `last_verified` dates per entry.
 
-## [Unreleased]
+## [0.2.0] - 2026-09-09
 
 ### Added (release clarity)
 - README Status line now says exactly what the v0.1.0 tag contains

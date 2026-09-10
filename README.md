@@ -4,10 +4,10 @@ Fan-built agent skills for BTS fans. English-first, with Korean summaries.
 
 팬이 만든 BTS 팬용 에이전트 스킬 모음입니다. 영어가 기본이며 한국어 요약을 함께 제공합니다.
 
-**Status:** The v0.1.0 tag (2026-09-08) contains bts-ticket-safety only.
-Everything merged since - the bts-official-news skill, the executable tools
-in `tools/`, and the CI workflows - is on `main` but unreleased, and ships
-with v0.2.0 after community validation.
+**Status:** v0.2.0 (2026-09-09) is the current release. It ships both
+skills - bts-ticket-safety and bts-official-news - plus the executable
+tools in `tools/` and the CI workflows. v0.1.0 (2026-09-08) contained
+bts-ticket-safety only.
 
 ## Install
 
