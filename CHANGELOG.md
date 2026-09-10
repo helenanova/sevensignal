@@ -6,6 +6,63 @@ its own `last_verified` dates per entry.
 
 ## [Unreleased]
 
+### Added (Day 2: official-news eval hardening, closes #1)
+- Expanded `bts-official-news` eval suites from 2 cases each to: 6 golden
+  (incl. Weverse notice feed, HYBE corporate news, a Korean-language query,
+  and read-date behavior), 7 adversarial (fake official-looking domains,
+  copied/undated notices, conflicting fan-account dates, Korean screenshot
+  claims, fake presale-code sites), 6 refusal (members-only scraping, session
+  cookies, credential handling, lyrics reproduction, Korean redistribution
+  request), and 5 freshness claim classes (undated copies, conflicting dates,
+  presale windows). Closes #1.
+
+### Added (release clarity)
+- README Status line now says exactly what the v0.1.0 tag contains
+  (bts-ticket-safety) versus what is unreleased on `main`
+  (bts-official-news, tools, CI), removing the released/unreleased ambiguity.
+- `docs/release-checklist.md`: pre-tag checks, tag + GitHub Release steps,
+  and post-publish verification.
+
+### Added (Day 2: official-news eval hardening, closes #1)
+- Expanded `bts-official-news` eval suites from 2 cases each to: 6 golden
+  (incl. Weverse notice feed, HYBE corporate news, a Korean-language query,
+  and read-date behavior), 7 adversarial (fake official-looking domains,
+  copied/undated notices, conflicting fan-account dates, Korean screenshot
+  claims, fake presale-code sites), 6 refusal (members-only scraping, session
+  cookies, credential handling, lyrics reproduction, Korean redistribution
+  request), and 5 freshness claim classes (undated copies, conflicting dates,
+  presale windows). Closes #1.
+
+### Added (Day 3: test the test tools)
+- `tools/test_tools.py`: 31 unit tests for the maintainer tools themselves -
+  `validate_data.py` (date parsing, host matching, duplicate domains,
+  Tier-1-confirms-Tier-2, future dates, stale warnings, eval-fixture schema),
+  `eval_runner.py` (host extraction, golden/adversarial deterministic checks,
+  offline answer scoring), and `check_links.py` (fully mocked network:
+  OK/WARN/FAIL classification, HEAD->GET fallback, DNS/timeout failures).
+- `ci.yml`: new `tool-tests` job runs the tool tests on Python 3.10/3.13,
+  plus a test-count summary step (36 matcher tests + 31 tool tests).
+
+### Added (Day 5: clean-install QA)
+- `docs/clean-install-qa.md`: fresh-clone verification (full check suite
+  green), `npx skills add` install-path check, and 10 end-to-end verdict
+  scenarios (5 ticket-safety, 5 official-news) - 10/10 expected verdicts.
+
+### Added (Day 4: easier first use)
+- `docs/quickstart.md`: 5-minute quickstart with copyable prompts and expected
+  verdicts for both skills, supported clients (skills CLI: Claude Code, Codex,
+  Cursor), and known limits (advise-only, per-tour seller confirmation,
+  30-day staleness, public pages only, English-first).
+- `docs/official-news-demo.md`: static scripted demo for the official-news
+  skill, alongside the ticket-safety demo GIF.
+- README links the quickstart and the official-news demo next to the GIF.
+
+### Added (Day 5: clean-install QA)
+- `docs/clean-install-qa.md`: fresh-clone verification (36 matcher + 31 tool
+  unit tests, validator and eval runner all green), `npx skills add` install
+  check, and 10 end-to-end verdict scenarios (5 ticket-safety, 5
+  official-news) - 10/10 expected verdicts. Tested versions recorded.
+
 ### Added (repo polish)
 - README: one-command install (`npx skills add helenanova/sevensignal`) and an
   animated demo near the top; new `docs/` folder for visual assets.
