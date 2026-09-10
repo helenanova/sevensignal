@@ -4,8 +4,10 @@ Fan-built agent skills for BTS fans. English-first, with Korean summaries.
 
 팬이 만든 BTS 팬용 에이전트 스킬 모음입니다. 영어가 기본이며 한국어 요약을 함께 제공합니다.
 
-**Status:** v0.1.0 is released. Two skills: bts-ticket-safety (complete and
-tested) and bts-official-news (new, unreleased). Community validation is next.
+**Status:** The v0.1.0 tag (2026-09-08) contains bts-ticket-safety only.
+Everything merged since - the bts-official-news skill, the executable tools
+in `tools/`, and the CI workflows - is on `main` but unreleased, and ships
+with v0.2.0 after community validation.
 
 ## Install
 
@@ -17,6 +19,10 @@ npx skills add helenanova/sevensignal
 ```
 
 ![Demo: an agent with the ticket-safety skill flags a fictional KakaoTalk deposit scam as UNVERIFIED, then confirms the official Korean seller as OFFICIAL_SELLER](docs/demo.gif)
+
+New here? The [5-minute quickstart](docs/quickstart.md) has copyable prompts
+with expected outputs, and there is a matching
+[static demo for the official-news skill](docs/official-news-demo.md).
 
 ## What this is
 
