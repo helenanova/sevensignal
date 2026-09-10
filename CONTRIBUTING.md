@@ -20,6 +20,19 @@ Welcome. These rules keep the project safe for fans.
    never automate access to any fan account. If a fact is only visible behind
    a login, it is not citable here.
 
+## Which files change per report type
+
+| Report type | Files you change |
+|---|---|
+| New scam pattern (scam-report issue) | `skills/bts-ticket-safety/references/scam-patterns.md` + new adversarial cases in `skills/bts-ticket-safety/evals/adversarial.yaml` |
+| New or corrected official seller (allowlist-change issue) | `skills/bts-ticket-safety/data/official-domains.yaml` + matching golden/adversarial cases in that skill's `evals/` |
+| News-source problem (wrong or missing official source) | `skills/bts-official-news/SKILL.md` + eval cases in `skills/bts-official-news/evals/` |
+| Bug in a tool (matcher, validator, eval runner, link checker) | the `tools/*.py` file plus a failing test first in the matching `tools/test_*.py` |
+| Docs only (README, docs/) | the doc itself; no eval or data changes needed |
+
+Every data or skill-behavior change runs the four checks in "Run the checks"
+before merge. Docs-only changes do not need eval fixtures.
+
 ## Changing the allowlist
 
 A domain enters `official-domains.yaml` only when an already-listed official
@@ -30,7 +43,20 @@ domain links to it or names it in a notice. Include:
 - the official source URL where you confirmed it
 - the date you confirmed it
 
-## Run the checks
+## Which files change per report type
+
+| Report type | Files to change | Checks to run |
+|---|---|---|
+| New scam pattern (scam-report issue) | `skills/bts-ticket-safety/references/scam-patterns.md` + new case in `skills/bts-ticket-safety/evals/adversarial.yaml` | all four checks |
+| New or corrected official seller (allowlist-change) | `skills/bts-ticket-safety/data/official-domains.yaml` + golden/adversarial cases in `skills/bts-ticket-safety/evals/` | all four checks |
+| News-source problem (wrong/missing official source) | `skills/bts-official-news/SKILL.md` + cases in `skills/bts-official-news/evals/` | all four checks |
+| Bug in a tool (matcher, validator, runner, link checker) | the `tools/*.py` file + a failing test first in the matching `tools/test_*.py` | all four checks |
+| Docs only (README, docs/) | the doc itself | no checks needed |
+
+See `docs/example-contribution.md` for one fully worked example, from evidence
+URL to data change to eval case to green checks.
+
+## Changing the allowlist
 
 Before opening a pull request, run:
 

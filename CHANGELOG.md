@@ -6,16 +6,6 @@ its own `last_verified` dates per entry.
 
 ## [Unreleased]
 
-### Added (Day 2: official-news eval hardening, closes #1)
-- Expanded `bts-official-news` eval suites from 2 cases each to: 6 golden
-  (incl. Weverse notice feed, HYBE corporate news, a Korean-language query,
-  and read-date behavior), 7 adversarial (fake official-looking domains,
-  copied/undated notices, conflicting fan-account dates, Korean screenshot
-  claims, fake presale-code sites), 6 refusal (members-only scraping, session
-  cookies, credential handling, lyrics reproduction, Korean redistribution
-  request), and 5 freshness claim classes (undated copies, conflicting dates,
-  presale windows). Closes #1.
-
 ### Added (release clarity)
 - README Status line now says exactly what the v0.1.0 tag contains
   (bts-ticket-safety) versus what is unreleased on `main`
@@ -43,11 +33,6 @@ its own `last_verified` dates per entry.
 - `ci.yml`: new `tool-tests` job runs the tool tests on Python 3.10/3.13,
   plus a test-count summary step (36 matcher tests + 31 tool tests).
 
-### Added (Day 5: clean-install QA)
-- `docs/clean-install-qa.md`: fresh-clone verification (full check suite
-  green), `npx skills add` install-path check, and 10 end-to-end verdict
-  scenarios (5 ticket-safety, 5 official-news) - 10/10 expected verdicts.
-
 ### Added (Day 4: easier first use)
 - `docs/quickstart.md`: 5-minute quickstart with copyable prompts and expected
   verdicts for both skills, supported clients (skills CLI: Claude Code, Codex,
@@ -58,10 +43,13 @@ its own `last_verified` dates per entry.
 - README links the quickstart and the official-news demo next to the GIF.
 
 ### Added (Day 5: clean-install QA)
-- `docs/clean-install-qa.md`: fresh-clone verification (36 matcher + 31 tool
-  unit tests, validator and eval runner all green), `npx skills add` install
-  check, and 10 end-to-end verdict scenarios (5 ticket-safety, 5
-  official-news) - 10/10 expected verdicts. Tested versions recorded.
+- `docs/clean-install-qa.md`: fresh-clone verification (full check suite
+  green), `npx skills add` install-path check, and 10 end-to-end verdict
+  scenarios (5 ticket-safety, 5 official-news) - 10/10 expected verdicts.
+
+### Added (Day 6: contributor flow)
+- CONTRIBUTING.md: table mapping each report type to the exact files to change.
+- docs/example-contribution.md: one worked example from evidence to data to eval to checks.
 
 ### Added (repo polish)
 - README: one-command install (`npx skills add helenanova/sevensignal`) and an
@@ -97,38 +85,6 @@ its own `last_verified` dates per entry.
 - MAINTAINERS.md: the weekly 15-minute maintenance loop, event-driven heavier
   sweeps, and the 60-day unmaintained policy (pinned stale warning, then
   archive - stale trust data is worse than none).
-
-### Changed (Days 15-28)
-- `tools/validate_data.py`, `tools/eval_runner.py`, and `tools/check_links.py`
-  now discover every `skills/*/` directory, so the new skill's fixtures and
-  any future skills are validated, evaluated, and link-checked automatically.
-
-### Added
-- `tools/domain_matcher.py`: dependency-free reference implementation of the
-  documented domain-matching rules, with a CLI that maps a host or URL to a
-  verdict (OFFICIAL / OFFICIAL_SELLER / UNVERIFIED). Fail-closed on anything
-  the rules do not cover (trailing dots, empty labels, unicode lookalikes,
-  userinfo tricks).
-- `tools/test_domain_matcher.py`: 36 unit tests covering exact matches, valid
-  subdomains, case/whitespace normalization, verdict mapping, and adversarial
-  lookalikes (suffix/prefix tricks, hyphen and missing-letter lookalikes,
-  phishing domains from the fixtures, shorteners, homoglyphs, punycode).
-- `tools/validate_data.py`: schema validation for the allowlist and eval
-  fixtures, including the executable "Tier 1 confirms Tier 2" rule (a Tier 2
-  verified_source must be on a Tier 1 domain) and the 30-day staleness
-  fail-safe (warnings by default, `--fail-on-stale` to enforce).
-- `tools/eval_runner.py`: runs the deterministic eval assertions in CI and
-  explicitly separates LLM-judged cases instead of silently passing them.
-  Golden URL cases and adversarial no-trust sub-checks are automated.
-- `tools/check_links.py`: live liveness check for every cited official source
-  URL (OK / WARN bot-mitigation / FAIL dead-citation classification).
-- GitHub Actions: `ci.yml` (unit tests on Python 3.10/3.13, schema validation,
-  deterministic evals on push/PR) and `freshness.yml` (weekly staleness + link
-  check that opens or updates one `stale-data` issue; never modifies data,
-  never auto-closes).
-- `requirements-dev.txt`: pins PyYAML for the maintainer tools; the matcher
-  stays dependency-free.
-- `tools/README.md`: usage, exit codes, strictness decisions, CI wiring.
 
 ## [0.1.0] - 2026-09-08
 
