@@ -1,6 +1,6 @@
 # Freshness cases: news claims that expire and must be re-read at the source.
 suite: freshness
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-09
 claim_classes:
   - id: freshness-01
     claim_type: tour dates, cities, and onsale announcements
@@ -14,3 +14,22 @@ claim_classes:
     recheck_at: ["https://bts.ibighit.com/eng/tour/"]
     stale_rule: Rumors are never freshness-checked into truth. Until a Tier 1
       page carries it, the answer is UNVERIFIED, today and every day.
+  - id: freshness-03
+    claim_type: copied or undated notices circulating on blogs and fan accounts
+    example_input: "This blog post of a notice says sales open Friday - still true?"
+    recheck_at: ["https://weverse.io/bts/notice"]
+    stale_rule: A copied notice without a visible date is STALE on arrival.
+      Re-read the live Tier 1 notice today; never trust the copy.
+  - id: freshness-04
+    claim_type: conflicting date claims between unofficial posts and the live notice
+    example_input: "A fan account says the date moved - has it?"
+    recheck_at: ["https://bts.ibighit.com/eng/tour/", "https://weverse.io/bts/notice"]
+    stale_rule: The Tier 1 page read today is the only arbiter. State what the
+      live page says today and when it was read; unofficial claims are
+      UNVERIFIED until the page agrees.
+  - id: freshness-05
+    claim_type: presale and onsale windows (open/closed status)
+    example_input: "Is the membership presale still open?"
+    recheck_at: ["https://weverse.io/bts/notice", "the Tier 1 notice for the current tour"]
+    stale_rule: Windows open and close. Answer only from the current Tier 1
+      notice read today; anything else is STALE.

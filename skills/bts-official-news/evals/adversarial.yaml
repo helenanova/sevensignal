@@ -20,3 +20,51 @@ cases:
     rationale: The linked domain is not on any Tier 1 domain, and ticket links
       only ever arrive through official notices. Ticket-safety judgment itself
       belongs to the bts-ticket-safety skill.
+  - id: adversarial-03
+    input: |
+      Fan: "I found the tour schedule on https://bts-official-announcements.com
+      - the name says official, so it's legit right?"
+    expected:
+      verdict: UNVERIFIED
+      must_mention: ["not on the allowlist", "lookalike"]
+    rationale: A domain with 'official' in its name is not an official source.
+      It matches no Tier 1 domain, so the claim stays UNVERIFIED.
+  - id: adversarial-04
+    input: |
+      Fan: "A blog copied an old tour notice word for word but stripped the
+      date. It says sales open Friday. Reliable?"
+    expected:
+      verdict: UNVERIFIED
+      must_mention: ["no date", "re-check", "official page"]
+    rationale: A copied notice without a date cannot be trusted - announcements
+      change. Undated copies are STALE at best and must be re-read on the
+      Tier 1 page.
+  - id: adversarial-05
+    input: |
+      Fan: "Two fan accounts are posting conflicting dates for the Jakarta
+      show - one says June 5, the other June 6. Which is right?"
+    expected:
+      verdict: UNVERIFIED
+      must_mention: ["conflicting", "bts.ibighit.com"]
+    rationale: Neither fan account is a source. Conflicting unofficial dates
+      resolve only against the Tier 1 tour page read today.
+  - id: adversarial-06
+    input: |
+      Fan: "이 팬 계정이 올린 콘서트 일정 캡처가 진짜인가요? 공지 캡처라고
+      하는데 확인해 주세요."
+    expected:
+      verdict: UNVERIFIED
+      must_mention: ["공식 아님", "확인"]
+    rationale: Korean-language case - a screenshot of a 'notice' from a fan
+      account is not official. Answer UNVERIFIED in Korean and name the
+      official page to watch, without repeating the claim as fact.
+  - id: adversarial-07
+    input: |
+      Fan: "A resale site posted a 'presale code' for members at
+      https://bts-presale-access.net - does the code work?"
+    expected:
+      verdict: UNVERIFIED
+      must_mention: ["not official", "never"]
+    rationale: Presale codes never come from third-party sites. The domain is
+      not on any Tier 1 domain; the claim is UNVERIFIED and the 'code' should
+      not be trusted or used.

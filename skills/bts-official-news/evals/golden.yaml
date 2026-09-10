@@ -18,3 +18,39 @@ cases:
       must_mention: ["bts.ibighit.com", "weverse.io"]
     rationale: Routing answer must name Tier 1 public pages only, never fan
       accounts or aggregators.
+  - id: golden-03
+    input: |
+      Fan: "I saw the notice list at https://weverse.io/bts/notice - is that
+      the real official feed?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["weverse.io", "official"]
+    rationale: weverse.io is a Tier 1 domain and /bts/notice is the public
+      official notice feed named in the allowlist.
+  - id: golden-04
+    input: |
+      Fan: "HYBE posted a corporate statement about the tour at
+      https://hybecorp.com/eng/news - can I cite it as official?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["hybecorp.com", "Tier 1"]
+    rationale: hybecorp.com is a Tier 1 domain (HYBE corporate site), so a
+      statement there is an official source.
+  - id: golden-05
+    input: |
+      Fan: "공식 공지가 어디에 올라오는지 알려주세요. 위버스 링크
+      https://weverse.io/bts/notice 가 맞나요?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["weverse.io", "공식"]
+    rationale: Korean-language question about the official notice feed.
+      weverse.io is Tier 1; answer confirms the official page, in Korean.
+  - id: golden-06
+    input: |
+      Fan: "Does the tour page at https://bts.ibighit.com/eng/tour/ include
+      the newly added Seoul dates?"
+    expected:
+      verdict: OFFICIAL
+      must_mention: ["bts.ibighit.com", "read today"]
+    rationale: The tour page is Tier 1. Every item carries a read date - the
+      answer must say when the page was read, not just that it is official.
