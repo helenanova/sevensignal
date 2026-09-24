@@ -4,6 +4,15 @@ Fan-built agent skills for BTS fans. English-first, with Korean summaries.
 
 팬이 만든 BTS 팬용 에이전트 스킬 모음입니다. 영어가 기본이며 한국어 요약을 함께 제공합니다.
 
+> **Unofficial fan project.** Not affiliated with or endorsed by HYBE, BIGHIT MUSIC,
+> BTS, Weverse, or any ticketing company. Non-commercial: it never sells tickets,
+> takes payments, or holds accounts. Always confirm on official sources before
+> paying anyone. Full notice: [DISCLAIMER.md](DISCLAIMER.md)
+>
+> 비공식 팬 프로젝트입니다. HYBE, BIGHIT MUSIC, BTS, Weverse 및 어떤 티켓 판매처와도
+> 관련이 없으며 승인받지 않았습니다. 비상업적 프로젝트로 티켓 판매, 결제, 계정 보관을
+> 하지 않습니다. 돈을 보내기 전에 반드시 공식 채널에서 확인하세요.
+
 **Status:** v0.2.0 (2026-09-09) is the current release. It ships both
 skills - bts-ticket-safety and bts-official-news - plus the executable
 tools in `tools/` and the CI workflows. v0.1.0 (2026-09-08) contained
